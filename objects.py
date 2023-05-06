@@ -5,18 +5,28 @@ SCREEN = WIDTH, HEIGHT = 720, 1280
 WORD_WIDTH = WIDTH // 4
 BLACK = (0, 0, 0)
 
+import pygame, random
+
+screen = pygame.display.set_mode((720, 1280))
+SCREEN = WIDTH, HEIGHT = 720, 1280
+WORD_WIDTH = WIDTH // 4
+BLACK = (0, 0, 0)
+
 class Word(pygame.sprite.Sprite):
-    def __init__(self, text, speed, delay):
+    def __init__(self, text, speed, delay, spacing, positions):
         super().__init__()
         self._delay = delay
         self._letters = list(text)
         self._font = pygame.font.SysFont("Arial", 36)
         self._color = (0, 0, 0)
         self._speed = speed
-        self._for_postion = text
+        self._for_position = text
         self._text = self._letters[::-1]
-        self._x = random.randint(0, WIDTH)
+        self._x = random.randint(25, WIDTH-25)
         self._y = -45 * len(text)
+        self._spacing = spacing  # spacing between words
+        self.rect = pygame.Rect(self._x, self._y, WORD_WIDTH, len(text) * WORD_WIDTH)
+        self._positions = positions
 
     def update(self):
         if self._delay > 0:
@@ -24,9 +34,16 @@ class Word(pygame.sprite.Sprite):
         else:
             self._y += self._speed
             if self._y > HEIGHT:
-                self._y = -45 * len(self._for_postion)  # start at bottom
-                self._x = random.randint(0, WIDTH)
-                self._delay = random.randint(0, 120)
+                self._y = -45 * len(self._for_position)
+                self._x = random.randint(25, WIDTH-25)
+                self._delay = random.randint(20, 100)
+
+                # Checks for overlapping with other words
+                for i, pos in enumerate(self._positions):
+                    if self.rect.colliderect(pygame.Rect(self._x, pos, WORD_WIDTH, len(self._for_position) * WORD_WIDTH)):
+                        self._y = pos - len(self._for_position) * WORD_WIDTH - self._spacing
+
+                self.rect = pygame.Rect(self._x, self._y, WORD_WIDTH, len(self._for_position) * WORD_WIDTH)
 
     def draw(self, surface):
         chars = list(self._text)
