@@ -34,9 +34,7 @@ class Word(pygame.sprite.Sprite):
         else:
             self._y += self._speed
             if self._y > HEIGHT:
-                self._y = -45 * len(self._for_position)
-                self._x = random.randint(25, WIDTH-25)
-                self._delay = random.randint(20, 100)
+                self.kill()
 
                 # Checks for overlapping with other words
                 for i, pos in enumerate(self._positions):
