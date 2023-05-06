@@ -21,11 +21,11 @@ spacing = 100
 
 for i, word in enumerate(word_list):
     delay = i * 60  # Delay each word by 1 second
-    word_obj = Word(word, 5, delay, spacing, word_positions, word_group)  # pass word_group
+    word_obj = Word(word, 5, delay, spacing, word_positions)
+    word_group.add(word_obj)
     word_positions.append(word_obj.rect.y)
 
 running = True
-current_word = None
 
 while running:
     screen.fill(background_color)
@@ -38,20 +38,11 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-            elif current_word and chr(event.key) == current_word.current_letter:
-                current_word.remove_letter()
-                if current_word.is_word_complete():
-                    current_word = None
-                else:
-                    current_word.current_letter = current_word._letters[0] 
-
-    if not current_word and len(word_group.sprites()) > 0:
-        current_word = word_group.sprites()[0]
 
     word_group.update()
     for word in word_group:
         word.draw(screen)
-        
+
     clock.tick(FPS)
     pygame.display.update()
 
