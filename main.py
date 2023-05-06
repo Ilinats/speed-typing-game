@@ -1,18 +1,31 @@
-import pygame
+import pygame, random
 from objects import Word
 
 pygame.init()
+
+# Basic settings
 screen = pygame.display.set_mode((720, 1280))
 background_color = (255, 255, 255)
 clock = pygame.time.Clock()
 FPS = 60
 
-test = Word("test", 10)
+# Creating a word group
+word_group = pygame.sprite.Group()
+
+# List of test words
+word_list = ["Test", "Ne znam", "Neshto", "Drugo"]
+
+# Adding the words form the list
+for word in word_list:
+    word_obj = Word(word, 5)
+    word_group.add(word_obj)
 
 running = True
 
 while running:
     screen.fill(background_color)
+    
+    # For exiting
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -21,7 +34,9 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
                 
-    test.movement()
+    word_group.update()
+    for word in word_group:
+        word.draw(screen)
     
     clock.tick(FPS)
     pygame.display.update()
