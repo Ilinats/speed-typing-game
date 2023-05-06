@@ -16,8 +16,9 @@ word_group = pygame.sprite.Group()
 word_list = ["Test", "Ne znam", "Neshto", "Drugo"]
 
 # Adding the words form the list
-for word in word_list:
-    word_obj = Word(word, 5)
+for i, word in enumerate(word_list):
+    delay = i * 60  # delay each word by 1 second
+    word_obj = Word(word, 5, delay)
     word_group.add(word_obj)
 
 running = True

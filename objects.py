@@ -6,22 +6,27 @@ WORD_WIDTH = WIDTH // 4
 BLACK = (0, 0, 0)
 
 class Word(pygame.sprite.Sprite):
-    def __init__(self, text, speed):
+    def __init__(self, text, speed, delay):
         super().__init__()
+        self._delay = delay
         self._letters = list(text)
         self._font = pygame.font.SysFont("Arial", 36)
         self._color = (0, 0, 0)
         self._speed = speed
+        self._for_postion = text
         self._text = self._letters[::-1]
         self._x = random.randint(0, WIDTH)
-        self._y = -25 * len(self._text)
+        self._y = -45 * len(text)
 
     def update(self):
-        self._y += self._speed
-        if self._y > HEIGHT:
-            self._y = -self._font.size(''.join(self._text))[1] 
-            self._x = random.randint(0, WIDTH)
-
+        if self._delay > 0:
+            self._delay -= 1
+        else:
+            self._y += self._speed
+            if self._y > HEIGHT:
+                self._y = -45 * len(self._for_postion)  # start at bottom
+                self._x = random.randint(0, WIDTH)
+                self._delay = random.randint(0, 120)
 
     def draw(self, surface):
         chars = list(self._text)
