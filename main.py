@@ -35,10 +35,8 @@ while running:
             else: 
                 letter = event.unicode
                 print(letter)
-                for word in word_group:
-                    word.check_character(letter)
     
-    word_group.update()
+    word_group.update(letter)
 
     clock.tick(FPS)
     pygame.display.update()

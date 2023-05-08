@@ -19,8 +19,10 @@ class Word(pygame.sprite.Sprite):
         self._y = -45
         self._x = random.randint(25, WIDTH - 20 * len(self._word))
         self._letter_position = 0
+        self._coloredtextstr = ''
+        self._coloredtext = self._font.render(self._coloredtextstr, True, GREEN)
 
-    def update(self):
+    def update(self, letter):
         if self._delay:
             self._delay -= 1
         else:    
@@ -29,20 +31,25 @@ class Word(pygame.sprite.Sprite):
                 self.kill()
                 
         screen.blit(self._text, (self._x, self._y))
+        screen.blit(self._coloredtext, (self._x, self._y))
         
-    def check_character(self, letter):
-        if self._letter_position < len(self._word):
-            if letter == self._word[self._letter_position]:
-                self._text = self._font.render(self._word[self._letter_position] , True, GREEN)
-                
-                if self._letter_position + 1 == len(self._word):
-                    self.kill()
+        if letter != None:
+            if self._letter_position < len(self._word):
+                if letter == self._word[self._letter_position]:
+                    self._text = self._font.render(self._word, True, BLACK)
                     
-                self._letter_position += 1
-                
+                    self._coloredtextstr += self._word[self._letter_position]
+                    self._coloredtext = self._font.render(self._coloredtextstr, True, GREEN)
+                    
+                    if self._letter_position + 1 == len(self._word):
+                        self.kill()
+                        
+                    self._letter_position += 1
+                    
+                else: 
+                    self._coloredtext = self._font.render(self._word, True, RED)
+                    self._letter_position = 0
+                    self._coloredtextstr = ''
+                    
             else: 
-                self._text = self._font.render(self._word, True, RED)
                 self._letter_position = 0
-                
-        else: 
-            self._letter_position = 0
