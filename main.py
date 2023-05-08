@@ -9,7 +9,14 @@ background_color = (255, 255, 255)
 clock = pygame.time.Clock()
 FPS = 60
 
-word = Word(1)
+level = 1
+
+word_group = pygame.sprite.Group()
+
+word1 = Word(1)
+word2 = Word(2)
+word_group.add(word1)
+word_group.add(word2)
 
 running = True
 
@@ -25,7 +32,7 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
     
-    word.update()
+    word_group.update()
 
     clock.tick(FPS)
     pygame.display.update()
