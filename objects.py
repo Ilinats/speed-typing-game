@@ -22,32 +22,35 @@ class Word(pygame.sprite.Sprite):
         self._letter_position = 0
         self._coloredtextstr = ''
         self._coloredtext = self._font.render(self._coloredtextstr, True, GREEN)
-        self._position = -1
+        self._state = 0
         self._current_color = BLACK
         self._first = -1
 
-    def update(self, letter):
+    def update(self, letter, state_of_word):
         if self._delay:
             self._delay -= 1
             self._first = 1
         else:  
             if self._first:
-                self._position = 2
+                self._state = -2
                 self._coloredtext = self._font.render(self._coloredtextstr, True, BLACK)
                 self._first = 0
                 
             self._y += self._speed
             if self._y > HEIGHT:
                 if self._current_color != GREEN:
-                    self._position = 0
+                    self._state = -4
                 else:
-                    self._position = 1
+                    self._state = -3
                 self.kill()
                 
         screen.blit(self._text, (self._x, self._y))
         screen.blit(self._coloredtext, (self._x, self._y))
         
         if letter != None:
+            # if state_of_word != self._letter_position:
+            #     self._state = 0
+                
             if self._letter_position < len(self._word):
                 if letter == self._word[self._letter_position]:
                     self._text = self._font.render(self._word, True, BLACK)
@@ -70,4 +73,4 @@ class Word(pygame.sprite.Sprite):
             else: 
                 self._letter_position = 0
                 
-        return self._position
+        return self._state

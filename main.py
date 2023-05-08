@@ -11,6 +11,8 @@ FPS = 60
 
 level = 1
 current_words = []
+lives = 3
+state_of_word = 0
 
 word_group = pygame.sprite.Group()
 
@@ -37,15 +39,21 @@ while running:
                 print(letter)
     
     for word in word_group:
-        result = word.update(letter)
+        result = word.update(letter, state_of_word)
         
-        if result == 0:
-            running = False 
-            break
-        elif result == 1:
+        if result == -4:
+            lives -= 1
             current_words.remove(word)
-        else:
+            break
+        elif result == -3:
+            current_words.remove(word)
+        elif word not in current_words and result == -2:
             current_words.append(word)
+            
+        #print(current_words)
+            
+    if lives == 0:
+        running = False
 
     clock.tick(FPS)
     pygame.display.update()
