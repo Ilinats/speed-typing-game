@@ -31,18 +31,18 @@ class Word(pygame.sprite.Sprite):
         screen.blit(self._text, (self._x, self._y))
         
     def check_character(self, letter):
-        if self._letter_position < len(self._word) - 1:
+        if self._letter_position < len(self._word):
             if letter == self._word[self._letter_position]:
                 self._text = self._font.render(self._word[self._letter_position] , True, GREEN)
+                
+                if self._letter_position + 1 == len(self._word):
+                    self.kill()
+                    
                 self._letter_position += 1
+                
             else: 
                 self._text = self._font.render(self._word, True, RED)
                 self._letter_position = 0
                 
-        elif self._letter_position + 1 == len(self._word):
-            self.kill()
-            
         else: 
             self._letter_position = 0
-            
-        return self._letter_position

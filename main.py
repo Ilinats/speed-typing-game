@@ -36,7 +36,7 @@ while running:
                 letter = event.unicode
                 print(letter)
                 for word in word_group:
-                    print(word.check_character(letter))
+                    word.check_character(letter)
     
     word_group.update()
 
