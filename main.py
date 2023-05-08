@@ -10,13 +10,13 @@ clock = pygame.time.Clock()
 FPS = 60
 
 level = 1
+current_words = []
 
 word_group = pygame.sprite.Group()
 
-word1 = Word(3)
-word2 = Word(2)
-word_group.add(word1)
-#word_group.add(word2)
+for i in range (0, 100):
+    word = Word(3, i+1)
+    word_group.add(word)
 
 running = True
 
@@ -36,7 +36,16 @@ while running:
                 letter = event.unicode
                 print(letter)
     
-    word_group.update(letter)
+    for word in word_group:
+        result = word.update(letter)
+        
+        if result == 0:
+            running = False 
+            break
+        elif result == 1:
+            current_words.remove(word)
+        else:
+            current_words.append(word)
 
     clock.tick(FPS)
     pygame.display.update()
