@@ -13,15 +13,16 @@ level = 1
 
 word_group = pygame.sprite.Group()
 
-word1 = Word(1)
+word1 = Word(3)
 word2 = Word(2)
 word_group.add(word1)
-word_group.add(word2)
+#word_group.add(word2)
 
 running = True
 
 while running:
     screen.fill(background_color)
+    letter = None
 
     # For exiting
     for event in pygame.event.get():
@@ -31,6 +32,11 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
+            else: 
+                letter = event.unicode
+                print(letter)
+                for word in word_group:
+                    print(word.check_character(letter))
     
     word_group.update()
 
