@@ -38,10 +38,10 @@ class Word(pygame.sprite.Sprite):
                 
             self._y += self._speed
             if self._y > HEIGHT:
-                if self._current_color != GREEN:
-                    self._state = -4
-                else:
+                if self._current_color == GREEN and self._letter_position == len(self._word):
                     self._state = -3
+                else:
+                    self._state = -4
                 self.kill()
                 
         screen.blit(self._text, (self._x, self._y))
