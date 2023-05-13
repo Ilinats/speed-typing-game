@@ -1,4 +1,4 @@
-import constants, pygame
+import constants, pygame, images
 from objects import Word
 
 pygame.init()
@@ -62,8 +62,46 @@ while running:
     if words_guessed >= 10:
         level += 1
         words_guessed = 0
+    
+    match lives:
+        case 1:
+            constants.screen.blit(images.filled_heart_img, (0,0))
+            constants.screen.blit(images.empty_heart_img, (50,0))
+            constants.screen.blit(images.empty_heart_img, (100,0))
+        case 2:
+            constants.screen.blit(images.filled_heart_img, (0,0))
+            constants.screen.blit(images.filled_heart_img, (50,0))
+            constants.screen.blit(images.empty_heart_img, (100,0))
+        case 3:
+            constants.screen.blit(images.filled_heart_img, (0,0))
+            constants.screen.blit(images.filled_heart_img, (50,0))
+            constants.screen.blit(images.filled_heart_img, (100,0))
+            
+    match words_guessed:
+        case 0:
+            constants.screen.blit(images.empty_level_bar, (555,0))
+        case 1:
+            constants.screen.blit(images.level1_bar, (555,0))
+        case 2:
+            constants.screen.blit(images.level2_bar, (555,0))
+        case 3:
+            constants.screen.blit(images.level3_bar, (555,0))
+        case 4:
+            constants.screen.blit(images.level4_bar, (555,0))
+        case 5:
+            constants.screen.blit(images.level5_bar, (555,0))
+        case 6:
+            constants.screen.blit(images.level6_bar, (555,0))
+        case 7:
+            constants.screen.blit(images.level7_bar, (555,0))
+        case 8:
+            constants.screen.blit(images.level8_bar, (555,0))
+        case 9:
+            constants.screen.blit(images.level9_bar, (555,0))
+        case 10:
+            constants.screen.blit(images.full_level_bar, (555,0))
         
-
+    
     clock.tick(FPS)
     pygame.display.update()
 
