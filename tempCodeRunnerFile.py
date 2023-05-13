@@ -1,1 +1,3 @@
-lives -= 1
+
+            
+        #print(current_words)

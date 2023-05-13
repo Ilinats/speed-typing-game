@@ -1,32 +1,25 @@
-import pygame
+import constants, pygame
 from objects import Word
 
 pygame.init()
 
 # Basic settings
-screen = pygame.display.set_mode((720, 1280))
-background_color = (255, 255, 255)
 clock = pygame.time.Clock()
 FPS = 60
 
 level = 1
-current_words = []
+words_guessed = 0
 lives = 3
-state_of_word = 0
+state_of_word_in_progress = 0
 
 word_group = pygame.sprite.Group()
 
-for i in range (0, 100):
-    word = Word(3, i+1)
-    word_group.add(word)
+word_group.add(Word(level))
 
 running = True
 
 while running:
-    screen.fill(background_color)
     letter = None
-
-    # For exiting
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -34,26 +27,42 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-            else: 
+            else:
                 letter = event.unicode
                 print(letter)
+
+    constants.screen.fill(constants.WHITE)
+
+    has_waiting = False
     
+    current_max_hit_state = 0
     for word in word_group:
-        result = word.update(letter, state_of_word)
-        
-        if result == -4:
-            lives -= 1
-            current_words.remove(word)
-            break
-        elif result == -3:
-            current_words.remove(word)
-        elif word not in current_words and result == -2:
-            current_words.append(word)
+        result = word.update(letter, state_of_word_in_progress)
+        match result:
+            case constants.STATE_WAITING:
+                has_waiting = True
+            case constants.STATE_GUESSED:
+                words_guessed += 1
+                word_group.remove(word)
+            case constants.STATE_MISSED:
+                lives -= 1
+                word_group.remove(word)
+            case _:
+                if result > current_max_hit_state:
+                    current_max_hit_state = result
+                    
+    state_of_word_in_progress = current_max_hit_state
             
-        #print(current_words)
-            
-    if lives == 0:
+    if not lives:
         running = False
+    
+    if not has_waiting:
+        word_group.add(Word(level))
+        
+    if words_guessed >= 10:
+        level += 1
+        words_guessed = 0
+        
 
     clock.tick(FPS)
     pygame.display.update()
