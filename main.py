@@ -14,7 +14,9 @@ state_of_word_in_progress = 0
 
 word_group = pygame.sprite.Group()
 
-word_group.add(Word(level))
+word_group.add(Word(0))
+
+constants.screen.fill(constants.WHITE)
 
 running = True
 
@@ -30,8 +32,6 @@ while running:
             else:
                 letter = event.unicode
                 print(letter)
-
-    constants.screen.fill(constants.WHITE)
 
     has_waiting = False
     
