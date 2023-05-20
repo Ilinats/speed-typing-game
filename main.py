@@ -123,7 +123,7 @@ def restart():
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
 
-        constants.screen.fill("black")
+        constants.screen.fill(constants.BLACK)
 
         PLAY_BACK = Button(None, (360, 640), "RESTART")
 
@@ -135,11 +135,39 @@ def restart():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                    game_loop()
+                    main_menu()
 
         clock.tick(FPS)
         pygame.display.update()
         
-game_loop()
+def main_menu():
+    while True:
+        constants.screen.fill(constants.WHITE)
+
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        PLAY_BUTTON = Button(pygame.image.load("play_img.png"), (360, 490), "PLAY")
+        OPTIONS_BUTTON = Button(pygame.image.load("options_img.png"), (360, 640), "OPTIONS")
+        QUIT_BUTTON = Button(pygame.image.load("quit_img.png"), (360, 790), "QUIT")
+
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    game_loop()
+                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    game_loop()
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    pygame.quit()
+                    
+        clock.tick(FPS)
+        pygame.display.update()
+        
+main_menu()
 
 pygame.quit()

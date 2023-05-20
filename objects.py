@@ -1,9 +1,7 @@
 import constants
-import pygame, random, string
-
+import pygame, random
 
 curr_chars = constants.MODE_1
-
 
 class Word(pygame.sprite.Sprite):
     def __init__(self, level):
