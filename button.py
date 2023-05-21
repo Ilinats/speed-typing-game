@@ -5,7 +5,7 @@ class Button():
 		self.image = image
 		self.x_pos = pos[0]
 		self.y_pos = pos[1]
-		self.font = pygame.font.SysFont("comicsans", 30)
+		self.font = pygame.font.SysFont("comicsans", 45)
 		self.base_color, self.hovering_color = constants.WHITE, constants.GREEN
 		self.text_input = text_input
 		self.text = self.font.render(self.text_input, True, self.base_color)

@@ -21,7 +21,7 @@ constants.screen.fill(constants.WHITE)
 
 def game_loop():
     global level, words_guessed, lives, state_of_word_in_progress, word_group
-    constants.screen.fill(constants.WHITE)
+    constants.screen.blit(constants.BACKGROUND, (0, 0))
     
     while True:
         letter = None

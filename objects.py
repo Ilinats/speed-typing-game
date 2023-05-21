@@ -25,8 +25,6 @@ class Word(pygame.sprite.Sprite):
         self._render.append(FONT.render(self._word, True, constants.BLACK))
         for i in range(1, len(self._word)):
             self._render.append(FONT.render(self._word[0:i], True, constants.GREEN))
-        self._render.append(pygame.mask.from_surface(self._render[0].convert()).to_surface())
-        self._render[-1].set_colorkey(constants.BLACK)
 
     def update(self, letter, state_of_word_in_progress):
         if self._delay:
@@ -39,23 +37,26 @@ class Word(pygame.sprite.Sprite):
             else:
                 self._state = 0
 
-        # wipe the old word
-        constants.screen.blit(self._render[-1], (self._x, self._y))
-
         self._y += self._speed
         if self._y > constants.HEIGHT:
             self.kill()
             return constants.STATE_MISSED
+        
+        word_rect = self._render[0].get_rect(topleft=(self._x, self._y))
+    
+        # Erase the previous word
+        constants.screen.blit(constants.BACKGROUND, word_rect, word_rect)
 
         # draw in black
         constants.screen.blit(self._render[0], (self._x, self._y))
 
+        if self._state >= len(self._word):
+            self.kill()
+            constants.screen.blit(constants.BACKGROUND, word_rect, word_rect)
+            return constants.STATE_GUESSED
+        
         # Draw guessed chars in green
         if self._state:
             constants.screen.blit(self._render[self._state], (self._x, self._y))
-
-        if self._state >= len(self._word):
-            self.kill()
-            return constants.STATE_GUESSED
 
         return self._state
