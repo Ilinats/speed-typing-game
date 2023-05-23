@@ -1,9 +1,11 @@
-import constants, pygame, images
+import constants, pygame, images, random
 from objects import Word
 from button import Button
 
 pygame.init()
-
+pygame.mixer.init()
+pygame.mixer.music.set_volume(0.2)
+        
 # Basic settings
 clock = pygame.time.Clock()
 FPS = 60
@@ -24,6 +26,7 @@ constants.screen.fill(constants.WHITE)
 def game_loop():
     global level, words_guessed, lives, state_of_word_in_progress, word_group, score, final_score
     constants.screen.blit(constants.BACKGROUND, (0, 0))
+    pygame.mixer.music.play()
     
     while True:
         letter = None
@@ -114,6 +117,7 @@ def game_loop():
     
     score = score*10 + words_guessed
     final_score = str(score)
+    score = 0
     level = 1
     words_guessed = 0
     lives = 3
@@ -122,6 +126,7 @@ def game_loop():
     word_group = pygame.sprite.Group()
 
     word_group.add(Word(0))
+    pygame.mixer.music.stop()
     restart()
         
 def restart():
@@ -151,6 +156,23 @@ def restart():
         pygame.display.update()
         
 def main_menu():
+    
+    match random.randint(1, 7):
+        case 1:
+            pygame.mixer.music.load('hell_above.mp3')
+        case 2:
+            pygame.mixer.music.load('king_for_a_day.mp3')
+        case 3:
+            pygame.mixer.music.load('bulls_in_the_bronx.mp3')
+        case 4:
+            pygame.mixer.music.load('tangled_in_the_great_escape.mp3')
+        case 5:
+            pygame.mixer.music.load('the_first_punch.mp3')
+        case 6:
+            pygame.mixer.music.load('one_hundred_sleepless_nights.mp3')
+        case 7:
+            pygame.mixer.music.load('caraphernelia.mp3')
+    
     while True:
         constants.screen.fill(constants.WHITE)
 

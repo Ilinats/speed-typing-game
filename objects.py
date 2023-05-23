@@ -9,8 +9,10 @@ class Word(pygame.sprite.Sprite):
         self._delay = random.randint(200, 500) // level if level else 0
         self._speed = 1 + level/3
         
-        if level % 4 == 0 and level != 0:
+        if level % 6 == 0 and level != 0:
             constants.word_len += 2
+        elif level == 0:
+            constants.word_len = 5
         
         self._word = "".join(
             (random.choice(curr_chars))
