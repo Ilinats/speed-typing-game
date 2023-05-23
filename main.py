@@ -12,15 +12,17 @@ level = 1
 words_guessed = 0
 lives = 3
 state_of_word_in_progress = 0
-
+score = 0
+final_score = ''
 word_group = pygame.sprite.Group()
+FONT = pygame.font.SysFont("comicsans", 45)
 
 word_group.add(Word(0))
 
 constants.screen.fill(constants.WHITE)
 
 def game_loop():
-    global level, words_guessed, lives, state_of_word_in_progress, word_group
+    global level, words_guessed, lives, state_of_word_in_progress, word_group, score, final_score
     constants.screen.blit(constants.BACKGROUND, (0, 0))
     
     while True:
@@ -63,6 +65,7 @@ def game_loop():
         if words_guessed == 10:
             level += 1
             words_guessed = 0
+            score += 1
             
         if not has_waiting:
             word_group.add(Word(level))
@@ -109,6 +112,8 @@ def game_loop():
         clock.tick(FPS)
         pygame.display.update()
     
+    score = score*10 + words_guessed
+    final_score = str(score)
     level = 1
     words_guessed = 0
     lives = 3
@@ -120,12 +125,17 @@ def game_loop():
     restart()
         
 def restart():
+    global final_score
+    text = FONT.render('Words guessed: ' + final_score, True, constants.WHITE)
+    
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
 
         constants.screen.fill(constants.BLACK)
 
         PLAY_BACK = Button(None, (360, 640), "RESTART")
+        rect = text.get_rect(center=(360, 450))
+        constants.screen.blit(text, rect)
 
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update()
