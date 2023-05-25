@@ -136,10 +136,12 @@ def restart():
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
 
-        constants.screen.fill(constants.BLACK)
-
+        constants.screen.blit(constants.BLURED_BG, (0, 0))
+        
         PLAY_BACK = Button(None, (360, 640), "RESTART")
         rect = text.get_rect(center=(360, 450))
+        shadow_rect = rect.move(2,2)
+        constants.screen.blit(FONT.render('Words guessed: ' + final_score, True, constants.BLACK), shadow_rect)
         constants.screen.blit(text, rect)
 
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
@@ -155,7 +157,39 @@ def restart():
         clock.tick(FPS)
         pygame.display.update()
         
+def options():
+    
+    constants.screen.blit(constants.BLURED_BG, (0, 0))
+    
+    while True:
+
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        LEVEL1 = Button(None, (360, 490), "LEVEL 1")
+        LEVEL2 = Button(None, (360, 640), "LEVEL 2")
+        LEVEL3 = Button(None, (360, 790), "LEVEL 3")
+
+        for button in [LEVEL1, LEVEL2, LEVEL3]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if LEVEL1.checkForInput(MENU_MOUSE_POS):
+                    game_loop()
+                if LEVEL2.checkForInput(MENU_MOUSE_POS):
+                    game_loop()
+                if LEVEL3.checkForInput(MENU_MOUSE_POS):
+                    game_loop()
+                    
+        clock.tick(FPS)
+        pygame.display.update()
+        
 def main_menu():
+    
+    constants.screen.blit(constants.BLURED_BG, (0, 0))
     
     match random.randint(1, 7):
         case 1:
@@ -172,15 +206,14 @@ def main_menu():
             pygame.mixer.music.load('one_hundred_sleepless_nights.mp3')
         case 7:
             pygame.mixer.music.load('caraphernelia.mp3')
+            
+    PLAY_BUTTON = Button(None, (360, 490), "PLAY")
+    OPTIONS_BUTTON = Button(None, (360, 640), "OPTIONS")
+    QUIT_BUTTON = Button(None, (360, 790), "QUIT")
     
     while True:
-        constants.screen.fill(constants.WHITE)
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-
-        PLAY_BUTTON = Button(pygame.image.load("play_img.png"), (360, 490), "PLAY")
-        OPTIONS_BUTTON = Button(pygame.image.load("options_img.png"), (360, 640), "OPTIONS")
-        QUIT_BUTTON = Button(pygame.image.load("quit_img.png"), (360, 790), "QUIT")
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
@@ -193,7 +226,7 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     game_loop()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    game_loop()
+                    options()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     
