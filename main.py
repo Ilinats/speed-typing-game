@@ -1,4 +1,4 @@
-import constants, pygame, images, random
+import constants, pygame, images, random, words
 from objects import Word
 from button import Button
 
@@ -19,14 +19,14 @@ final_score = ''
 word_group = pygame.sprite.Group()
 FONT = pygame.font.SysFont("comicsans", 45)
 
-word_group.add(Word(0))
-
 constants.screen.fill(constants.WHITE)
 
-def game_loop():
+def game_loop(word_level):
     global level, words_guessed, lives, state_of_word_in_progress, word_group, score, final_score
     constants.screen.blit(constants.BACKGROUND, (0, 0))
     pygame.mixer.music.play()
+    constants.MODE = word_level
+    word_group.add(Word(0))
     
     while True:
         letter = None
@@ -158,7 +158,6 @@ def restart():
         pygame.display.update()
         
 def options():
-    
     constants.screen.blit(constants.BLURED_BG, (0, 0))
     
     while True:
@@ -178,11 +177,11 @@ def options():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if LEVEL1.checkForInput(MENU_MOUSE_POS):
-                    game_loop()
+                    game_loop(words.LEVEL_1)
                 if LEVEL2.checkForInput(MENU_MOUSE_POS):
-                    game_loop()
+                    game_loop(words.LEVEL_2)
                 if LEVEL3.checkForInput(MENU_MOUSE_POS):
-                    game_loop()
+                    game_loop(words.LEVEL_3)
                     
         clock.tick(FPS)
         pygame.display.update()
@@ -207,15 +206,14 @@ def main_menu():
         case 7:
             pygame.mixer.music.load('caraphernelia.mp3')
             
-    PLAY_BUTTON = Button(None, (360, 490), "PLAY")
-    OPTIONS_BUTTON = Button(None, (360, 640), "OPTIONS")
-    QUIT_BUTTON = Button(None, (360, 790), "QUIT")
+    PLAY_BUTTON = Button(None, (360, 550), "PLAY")
+    QUIT_BUTTON = Button(None, (360, 680), "QUIT")
     
     while True:
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update()
         
@@ -224,8 +222,6 @@ def main_menu():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    game_loop()
-                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()

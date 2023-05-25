@@ -1,23 +1,23 @@
 import constants
 import pygame, random
 
-curr_chars = constants.MODE_1
-
 class Word(pygame.sprite.Sprite):
     def __init__(self, level):
         super().__init__()
         self._delay = random.randint(200, 500) // level if level else 0
         self._speed = 1 + level/3
         
-        if level % 6 == 0 and level != 0:
-            constants.word_len += 2
-        elif level == 0:
-            constants.word_len = 5
+        i = random.randint(0, len(constants.MODE)-1)
         
-        self._word = "".join(
-            (random.choice(curr_chars))
-            for x in range(random.randint(2, constants.word_len))
-        )
+        if(len(constants.WORDS_PASSED) == len(constants.MODE)):
+            constants.WORDS_PASSED = []
+
+        while i in constants.WORDS_PASSED:
+            i = random.randint(0, len(constants.MODE)-1)
+        
+        self._word = constants.MODE[i]
+        constants.WORDS_PASSED.append(i)
+        
         self._y = -45
         self._x = random.randint(25, constants.WIDTH - 20 * len(self._word))
         self._state = 0
