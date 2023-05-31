@@ -5,7 +5,7 @@ class Word(pygame.sprite.Sprite):
     def __init__(self, level):
         super().__init__()
         self._delay = random.randint(200, 500) // level if level else 0
-        self._speed = 1 + level/3
+        self._speed = random.random() + level/3
         
         i = random.randint(0, len(constants.MODE)-1)
         
