@@ -1,4 +1,5 @@
-import constants, pygame, images, random, words
+import constants, pygame, images, random, words, pickle, os
+from collections import OrderedDict
 from objects import Word
 from button import Button
 
@@ -17,6 +18,7 @@ state_of_word_in_progress = 0
 score = 0
 final_score = ''
 username = ''
+rankings = {}
 word_group = pygame.sprite.Group()
 FONT = pygame.font.SysFont("comicsans", 45)
 
@@ -123,7 +125,6 @@ def game_loop(word_level):
     words_guessed = 0
     lives = 3
     state_of_word_in_progress = 0
-    username = ''
     
     word_group = pygame.sprite.Group()
 
@@ -132,8 +133,22 @@ def game_loop(word_level):
     restart()
         
 def restart():
-    global final_score
+    global final_score, username, rankings
     text = FONT.render('Words guessed: ' + final_score, True, constants.WHITE)
+    
+    rankings[username] = int(final_score)
+        
+    print(rankings)
+        
+    rankings = OrderedDict(sorted(rankings.items(), key=lambda x: x[1], reverse=True))
+    
+    if len(rankings) > 10:
+       rankings.popitem()
+        
+    with open('rankings.pkl', 'wb') as output_file:
+        pickle.dump(dict(rankings), output_file)
+        
+    username = ''
     
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
@@ -158,7 +173,7 @@ def restart():
 
         clock.tick(FPS)
         pygame.display.update()
-        
+    
 def options():
     constants.screen.blit(constants.BLURED_BG, (0, 0))
     
@@ -189,16 +204,43 @@ def options():
         pygame.display.update()
         
 def ranking():
+    global rankings, FONT
     constants.screen.blit(constants.BLURED_BG, (0, 0))
-    
+
+    table_width = 600
+    table_height = 400
+    table_x = (constants.WIDTH - table_width) // 2
+    table_y = (constants.HEIGHT - table_height) // 2
+    column_width = table_width // 3
+    row_height = 50
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()         
-    
+                    pygame.quit()
+
+        headers = ["Rank", "Name", "Score"]
+        for idx, header in enumerate(headers):
+            header_surface = FONT.render(header, True, constants.WHITE)
+            header_x = table_x + idx * column_width
+            header_y = table_y
+            constants.screen.blit(header_surface, (header_x, header_y))
+
+        for idx, (name, score) in enumerate(rankings.items()):
+            rank_surface = FONT.render(str(idx + 1), True, constants.WHITE)
+            name_surface = FONT.render(name, True, constants.WHITE)
+            score_surface = FONT.render(str(score), True, constants.WHITE)
+
+            row_x = table_x
+            row_y = table_y + (idx + 1) * row_height
+
+            constants.screen.blit(rank_surface, (row_x, row_y))
+            constants.screen.blit(name_surface, (row_x + column_width, row_y))
+            constants.screen.blit(score_surface, (row_x + 2 * column_width, row_y))
+
         clock.tick(FPS)
         pygame.display.update()
         
@@ -227,17 +269,21 @@ def enter_name():
                     username += event.unicode
 
         constants.screen.blit(constants.BLURED_BG, (0, 0))
-        pygame.draw.rect(constants.screen, constants.BLACK, input_box, 2)
+        pygame.draw.rect(constants.screen, constants.BLACK, input_box, 3)
         
         text_surface = font .render(username, True, (255, 255, 255))
         text_x = input_box.x + (input_box.width - text_surface.get_width()) // 2
         text_y = input_box.y + (input_box.height - text_surface.get_height()) // 2
+        rect = text_surface.get_rect(center=(360, 640))
+        shadow_rect = rect.move(1,1)
+        constants.screen.blit(font.render(username, True, constants.BLACK), shadow_rect)
         constants.screen.blit(text_surface, (text_x, text_y))
 
         pygame.display.update()
         clock.tick(FPS)
 
 def main_menu():
+    global rankings
     constants.screen.blit(constants.BLURED_BG, (0, 0))
     
     match random.randint(1, 7):
@@ -259,6 +305,16 @@ def main_menu():
     PLAY_BUTTON = Button(None, (360, 520), "PLAY")
     RANK_BUTTON = Button(None, (360, 640), "RANKING")
     QUIT_BUTTON = Button(None, (360, 760), "QUIT")
+    
+    if os.path.exists('rankings.pkl'):
+        with open('rankings.pkl', 'rb') as input_file:
+            try:
+                rankings = pickle.load(input_file)
+                print("\n")
+            except (FileNotFoundError, EOFError):
+                rankings = {}
+    else:
+        rankings = {}
     
     while True:
 
