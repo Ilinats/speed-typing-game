@@ -16,13 +16,14 @@ lives = 3
 state_of_word_in_progress = 0
 score = 0
 final_score = ''
+username = ''
 word_group = pygame.sprite.Group()
 FONT = pygame.font.SysFont("comicsans", 45)
 
 constants.screen.fill(constants.WHITE)
 
 def game_loop(word_level):
-    global level, words_guessed, lives, state_of_word_in_progress, word_group, score, final_score
+    global level, words_guessed, lives, state_of_word_in_progress, word_group, score, final_score, username
     constants.screen.blit(constants.BACKGROUND, (0, 0))
     pygame.mixer.music.play()
     constants.MODE = word_level
@@ -122,7 +123,8 @@ def game_loop(word_level):
     words_guessed = 0
     lives = 3
     state_of_word_in_progress = 0
-
+    username = ''
+    
     word_group = pygame.sprite.Group()
 
     word_group.add(Word(0))
@@ -186,8 +188,56 @@ def options():
         clock.tick(FPS)
         pygame.display.update()
         
-def main_menu():
+def ranking():
+    constants.screen.blit(constants.BLURED_BG, (0, 0))
     
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()         
+    
+        clock.tick(FPS)
+        pygame.display.update()
+        
+def enter_name():
+    global username
+    input_box_x = (constants.WIDTH - 300) // 2
+    input_box_y = (constants.HEIGHT - 40) // 2
+    input_box = pygame.Rect(input_box_x, input_box_y, 300, 40)
+    font = pygame.font.SysFont("comicsans", 30)
+
+    constants.screen.blit(constants.BLURED_BG, (0, 0))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return username
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                if event.key == pygame.K_RETURN:
+                    options()
+                if event.key == pygame.K_BACKSPACE:
+                    username = username[:-1]
+                elif len(username) < 16:
+                    username += event.unicode
+
+        constants.screen.blit(constants.BLURED_BG, (0, 0))
+        pygame.draw.rect(constants.screen, constants.BLACK, input_box, 2)
+        
+        text_surface = font .render(username, True, (255, 255, 255))
+        text_x = input_box.x + (input_box.width - text_surface.get_width()) // 2
+        text_y = input_box.y + (input_box.height - text_surface.get_height()) // 2
+        constants.screen.blit(text_surface, (text_x, text_y))
+
+        pygame.display.update()
+        clock.tick(FPS)
+
+def main_menu():
     constants.screen.blit(constants.BLURED_BG, (0, 0))
     
     match random.randint(1, 7):
@@ -206,14 +256,15 @@ def main_menu():
         case 7:
             pygame.mixer.music.load('caraphernelia.mp3')
             
-    PLAY_BUTTON = Button(None, (360, 550), "PLAY")
-    QUIT_BUTTON = Button(None, (360, 680), "QUIT")
+    PLAY_BUTTON = Button(None, (360, 520), "PLAY")
+    RANK_BUTTON = Button(None, (360, 640), "RANKING")
+    QUIT_BUTTON = Button(None, (360, 760), "QUIT")
     
     while True:
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        for button in [PLAY_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, RANK_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update()
         
@@ -222,7 +273,9 @@ def main_menu():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    options()
+                    enter_name()
+                if RANK_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    ranking()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     
