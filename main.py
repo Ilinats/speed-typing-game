@@ -220,7 +220,7 @@ def ranking():
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
+                    main_menu()
 
         headers = ["Rank", "Name", "Score"]
         for idx, header in enumerate(headers):
